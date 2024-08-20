@@ -1,0 +1,19 @@
+{{ project_name }}
+{{ project_name | length * "=" }}
+
+{{ project_description }}
+{% if hosting_platform != "none" %}
+
+Repository_
+
+.. _Repository: {{ repo_url }}
+{% endif %}
+
+
+API reference
+-------------
+
+.. automodule:: {{ module_name }}
+   :members:
+   :undoc-members:
+   :show-inheritance:

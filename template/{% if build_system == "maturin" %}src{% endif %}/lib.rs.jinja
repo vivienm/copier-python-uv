@@ -1,0 +1,14 @@
+use pyo3::prelude::*;
+
+/// Returns a greeting.
+#[pyfunction]
+fn hello() -> PyResult<String> {
+    Ok("Hello from {{ project_name }}!".into())
+}
+
+/// Low-level extension module.
+#[pymodule]
+fn _lowlevel(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(hello, m)?)?;
+    Ok(())
+}

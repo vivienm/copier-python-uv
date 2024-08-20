@@ -1,0 +1,99 @@
+{# I'd rather indent with two spaces, but this clashes with uv's formatting. #}
+{% if project_type != "virtual" %}
+[project]
+name = "{{ project_slug }}"
+version = "0.1.0"
+description = "{{ project_description.removesuffix('.') }}"
+authors = [
+    { name = "{{ author_name }}", email = "{{ author_email }}" },
+]
+{% if project_type == "application" %}
+dependencies = [
+    "typer-slim>=0.12.3"
+]
+{% else %}
+dependencies = []
+{% endif %}
+readme = "README.md"
+requires-python = ">={{ python_version }}"
+license = { text = "{% if license == 'Proprietary' %}LicenseRef-Proprietary{% else %}{{ license }}{% endif %}" }
+classifiers = ["Private :: Do Not Upload"]
+{% if project_type == "application" %}
+
+[project.scripts]
+{{ script_name }} = "{{ module_name }}.__main__:app"
+{% endif %}
+
+[project.urls]
+{% if pages_url %}
+Documentation = "{{ pages_url }}"
+{% endif %}
+{% if repo_url %}
+Repository = "{{ repo_url }}"
+{% if hosting_platform == "github" %}
+Issues = "{{ repo_url }}/issues"
+{% endif %}
+{% endif %}
+
+[build-system]
+{% if build_system == "hatchling" %}
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+{% elif build_system == "maturin" %}
+requires = ["maturin>=1.7.0"]
+build-backend = "maturin"
+{% endif %}
+
+[tool.uv]
+dev-dependencies = [
+{% if project_type == "library" %}
+    "furo>=2024.8.6",
+{% endif %}
+    "mypy>=1.11.0",
+    "nox>=2024.4.15",
+    "pip-audit>=2.7.3",
+    "pytest>=8.3.1",
+    "ruff>=0.5.4",
+{% if project_type == "library" %}
+    "sphinx>=8.0.2",
+{% endif %}
+]
+{% if build_system == "maturin" %}
+
+[tool.maturin]
+python-source = "python"
+module-name = "{{ module_name }}._lowlevel"
+features = ["pyo3/extension-module"]
+{% endif %}
+
+[tool.mypy]
+strict = true
+{% if build_system == "maturin" %}
+
+[[tool.mypy.overrides]]
+module = "{{ module_name }}._lowlevel"
+ignore_missing_imports = true
+{% endif %}
+
+[tool.ruff.lint]
+extend-select= [
+    "I",  # isort
+]
+unfixable = [
+    "F401",  # unused imports
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--doctest-modules",
+    "--import-mode=importlib",
+]
+testpaths = [
+    "src",
+    "tests",
+]
+{% else %}
+{# Virtual project type. #}
+[tool.uv.workspace]
+members = []
+{% endif %}

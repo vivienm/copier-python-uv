@@ -1,0 +1,42 @@
+{% set has_strenum = python_version_info >= [3, 11] %}
+import logging
+from enum import {% if has_strenum %}StrEnum{% else %}Enum{% endif %}{{ '' }}
+from typing import Annotated
+
+import typer
+
+from . import hello
+
+app = typer.Typer()
+
+
+class LogLevel({% if has_strenum %}StrEnum{% else %}str, Enum{% endif %}):
+    DEBUG = "debug"
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+    CRITICAL = "critical"
+
+
+def setup_logging(log_level: LogLevel) -> None:
+    logging.basicConfig(level=log_level.upper())
+
+
+@app.command()
+def main(
+    log_level: Annotated[
+        LogLevel,
+        typer.Option(
+            envvar="{{ script_name | replace('-', '_') | upper }}_LOG_LEVEL",
+            help="Set the verbosity level for log messages",
+            case_sensitive=False,
+        ),
+    ] = LogLevel.INFO,
+) -> None:
+    """{{ project_description }}"""
+    setup_logging(log_level)
+    print(hello())
+
+
+if __name__ == "__main__":
+    app()

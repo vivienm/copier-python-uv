@@ -1,0 +1,12 @@
+[package]
+name = "{{ package_name }}"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "_{{ module_name }}"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = "0.22.2"

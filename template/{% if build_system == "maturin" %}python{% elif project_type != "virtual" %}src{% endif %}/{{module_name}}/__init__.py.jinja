@@ -1,0 +1,9 @@
+{% if build_system == "maturin" %}
+from ._lowlevel import hello
+
+__all__ = ["hello"]
+{% else %}
+def hello() -> str:
+    """Return a greeting."""
+    return "Hello from {{ project_name }}!"
+{% endif %}

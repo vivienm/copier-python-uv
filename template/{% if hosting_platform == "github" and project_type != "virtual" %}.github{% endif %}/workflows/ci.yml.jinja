@@ -1,0 +1,100 @@
+name: "CI"
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: "ci-${{ '{{' }} github.ref {{ '}}' }}"
+  cancel-in-progress: true
+
+jobs:
+  just:
+    name: "Just"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
+{% if build_system == "maturin" %}
+      - name: "Install the Rust toolchain"
+        uses: "dtolnay/rust-toolchain@stable"
+        with:
+          components: "clippy, rustfmt"
+      - name: "Install sccache"
+        uses: "mozilla-actions/sccache-action@v0.0.5"
+      - name: "Set up sccache"
+        run: |
+          echo "RUSTC_WRAPPER=sccache" >> "${GITHUB_ENV}"
+          echo "SCCACHE_GHA_ENABLED=true" >> "${GITHUB_ENV}"
+{% endif %}
+      - name: "Install development tools"
+        uses: "taiki-e/install-action@v2"
+        with:
+          tool: "just{% if build_system == 'maturin' %}, cargo-audit{% endif %}, typos"
+      - name: "Install uv"
+        run: "curl -LsSf https://astral.sh/uv/install.sh | sh"
+{# uv goes to ~/.cargo/bin, already in $PATH thanks to taiki-e/install-action #}
+{% if build_system == "maturin" %}
+      - name: "Cache Cargo directories"
+        uses: "actions/cache@v4"
+        with:
+{# Directory ~/.cargo/bin/ is populated by taiki-e/install-action and uv installer, we don't want to cache it #}
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
+            ~/.cargo/advisory-db/
+            target/
+          key: "${{ '{{' }} runner.os {{ '}}' }}-cargo-${{ '{{' }} hashFiles('Cargo.toml', 'Cargo.lock') {{ '}}' }}"
+          restore-keys: "${{ '{{' }} runner.os {{ '}}' }}-cargo-"
+{% endif %}
+      - name: "Cache uv directories"
+        uses: "actions/cache@v4"
+        with:
+          path: |
+            ~/.cache/uv/
+            .venv/
+          key: "${{ '{{' }} runner.os {{ '}}' }}-uv-${{ '{{' }} hashFiles('pyproject.toml', 'requirements.lock', 'requirements-dev.lock') {{ '}}' }}"
+          restore-keys: "${{ '{{' }} runner.os {{ '}}' }}-uv-"
+      - name: "Run Just"
+        run: "just ci"
+        env:
+          RUSTFLAGS: "-D warnings"
+          RUSTDOCFLAGS: "-D warnings"
+{% if project_type == "library" %}
+      - name: "Upload docs artifact"
+        uses: "actions/upload-artifact@v4"
+        with:
+          name: "docs"
+          path: "./docs/_build/html"
+          retention-days: 7
+{% endif %}
+{% if github_pages %}
+
+  pages:
+    name: "Pages"
+    if: "github.ref == format('refs/heads/{0}', github.event.repository.default_branch)"
+    needs: "just"
+    permissions:
+      pages: "write"
+      id-token: "write"
+    environment:
+      name: "github-pages"
+      url: "${{ '{{' }} steps.deployment.outputs.page_url {{ '}}' }}"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Download docs artifact"
+        uses: "actions/download-artifact@v4"
+        with:
+          name: "docs"
+          path: "${{ '{{' }} runner.temp {{ '}}' }}/pages/docs"
+      - name: "Upload pages artifact"
+        uses: "actions/upload-pages-artifact@v3"
+        with:
+          path: "${{ '{{' }} runner.temp {{ '}}' }}/pages"
+      - name: "Deploy pages"
+        id: "deployment"
+        uses: "actions/deploy-pages@v4"
+{% endif %}

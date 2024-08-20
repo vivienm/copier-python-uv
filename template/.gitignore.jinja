@@ -1,0 +1,13 @@
+{% if project_type != "virtual" %}
+/.mypy_cache/
+/.pytest_cache/
+/.ruff_cache/
+{% endif %}
+/.venv/
+{% if project_type != "virtual" %}
+/build/
+/dist/
+{% if build_system == "maturin" %}
+/target/
+{% endif %}
+{% endif %}

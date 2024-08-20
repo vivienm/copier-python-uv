@@ -1,0 +1,58 @@
+set shell := ["bash", "-uc"]
+
+ci:{%if build_system == "maturin" %} cargo-fmt cargo-clippy cargo-audit{% endif %} ruff mypy pytest{% if project_type == "library" %} sphinx{% endif %} pip-audit typos
+{% if build_system == "maturin" %}
+
+[group('rust')]
+cargo-fmt:
+  cargo fmt --check
+
+[group('rust')]
+cargo-clippy:
+  cargo clippy --all-targets
+
+[group('rust')]
+cargo-audit:
+  cargo audit
+{% endif %}
+
+{% if build_system == "maturin" %}
+[group('python')]
+{% endif %}
+ruff:
+  uv run ruff check
+
+{% if build_system == "maturin" %}
+[group('python')]
+{% endif %}
+ruff-format:
+  uv run ruff format --check
+
+{% if build_system == "maturin" %}
+[group('python')]
+{% endif %}
+mypy:
+  uv run mypy .
+
+{% if build_system == "maturin" %}
+[group('python')]
+{% endif %}
+pytest *args="":
+  uv run pytest {{ '{{' }}args{{ '}}' }}
+{% if project_type == "library" %}
+
+{% if build_system == "maturin" %}
+[group('python')]
+{% endif %}
+sphinx:
+  uv run sphinx-build docs docs/_build/html
+{% endif %}
+
+{% if build_system == "maturin" %}
+[group('python')]
+{% endif %}
+pip-audit:
+  uv run pip-audit --disable-pip --requirement <(uv pip compile --no-header --no-annotate --generate-hashes <(uv pip list --format=freeze --exclude-editable))
+
+typos:
+  typos

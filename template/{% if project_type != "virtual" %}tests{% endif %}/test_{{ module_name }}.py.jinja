@@ -1,0 +1,5 @@
+from {{ module_name }} import hello
+
+
+def test_hello() -> None:
+    assert hello() == "Hello from {{ project_name }}!"
