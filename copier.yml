@@ -58,10 +58,8 @@ author_email:
   type: "str"
   placeholder: "john@doe.tld"
   validator: >
-    {%- if not author_email -%}
-    You must provide your email.
-    {%- elif "@" not in author_email -%}
-    The email must contain an "@".
+    {%- if not author_email | regex_search('^[^\s@]+@[^\s@]+\.[^\s@]+$') -%}
+    You must provide a valid email address.
     {%- endif -%}
 
 license:
