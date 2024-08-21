@@ -50,12 +50,14 @@ jobs:
         with:
           path: |
             ~/.cache/uv/
-            ~/.local/share/uv/python/
             .venv/
           key: "${{ '{{' }} runner.os {{ '}}' }}-uv-${{ '{{' }} hashFiles('uv.lock') {{ '}}' }}"
           restore-keys: "${{ '{{' }} runner.os {{ '}}' }}-uv-"
       - name: "Run Just"
-        run: "just ci"
+{# We install Python first, else the cached venv is invalidated due to missing Python interpreter. #}
+        run: |
+          uv python install
+          just ci
 {% if build_system == "maturin" %}
         env:
           RUSTC_WRAPPER: "sccache"
