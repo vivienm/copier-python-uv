@@ -56,3 +56,8 @@ pip-audit:
 
 typos:
   typos
+{% if project_type == "application" %}
+
+run *args="":
+  uv run {{ script_name }} {{ '{{' }}args{{ '}}' }}
+{% endif %}
