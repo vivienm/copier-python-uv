@@ -50,6 +50,7 @@ jobs:
         with:
           path: |
             ~/.cache/uv/
+            ~/.local/share/uv/python/
             .venv/
           key: "${{ '{{' }} runner.os {{ '}}' }}-uv-${{ '{{' }} hashFiles('uv.lock') {{ '}}' }}"
           restore-keys: "${{ '{{' }} runner.os {{ '}}' }}-uv-"
