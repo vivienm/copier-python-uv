@@ -54,9 +54,13 @@ jobs:
           key: "${{ '{{' }} runner.os {{ '}}' }}-uv-${{ '{{' }} hashFiles('uv.lock') {{ '}}' }}"
           restore-keys: "${{ '{{' }} runner.os {{ '}}' }}-uv-"
       - name: "Run Just"
-{# We install Python first, else the cached venv is invalidated due to missing Python interpreter. #}
         run: |
+{# We install Python first, else the cached venv is invalidated due to missing Python interpreter. #}
           uv python install
+{% if build_system == "maturin" %}
+{# The package may look present in the cached venv but its extension is missing. Let uv rebuild it. #}
+          touch pyproject.toml
+{% endif %}
           just ci
 {% if build_system == "maturin" %}
         env:
