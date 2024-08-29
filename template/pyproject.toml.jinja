@@ -4,9 +4,13 @@
 name = "{{ project_slug }}"
 version = "0.1.0"
 description = "{{ project_description.removesuffix('.') }}"
+readme = "README.md"
 authors = [
     { name = "{{ author_name }}", email = "{{ author_email }}" },
 ]
+license = { text = "{% if license == 'Proprietary' %}LicenseRef-Proprietary{% else %}{{ license }}{% endif %}" }
+classifiers = ["Private :: Do Not Upload"]
+requires-python = ">={{ python_version }}"
 {% if project_type == "application" %}
 dependencies = [
     "typer-slim>=0.12.3"
@@ -14,10 +18,6 @@ dependencies = [
 {% else %}
 dependencies = []
 {% endif %}
-readme = "README.md"
-requires-python = ">={{ python_version }}"
-license = { text = "{% if license == 'Proprietary' %}LicenseRef-Proprietary{% else %}{{ license }}{% endif %}" }
-classifiers = ["Private :: Do Not Upload"]
 {% if project_type == "application" %}
 
 [project.scripts]
