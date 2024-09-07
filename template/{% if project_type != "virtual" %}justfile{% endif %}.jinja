@@ -52,8 +52,8 @@ sphinx:
 [group('python')]
 {% endif %}
 pip-audit:
-{# https://github.com/astral-sh/uv/issues/6995 #}
-  uv run pip-audit --strict --require-hashes --disable-pip --requirement <(uv export --format requirements-txt --all-extras | grep -v '^-e ')
+  requirements="$(uv export --format requirements-txt --all-extras --no-emit-project)" \
+  && uv run pip-audit --strict --require-hashes --disable-pip --requirement <(echo "${requirements}")
 
 typos:
   typos
