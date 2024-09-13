@@ -59,6 +59,11 @@ dev-dependencies = [
 {% endif %}
 ]
 {% if build_system == "maturin" %}
+cache-keys = [
+    { file = "Cargo.toml" },
+    { file = "Cargo.lock"},
+    { file = "src/**/*.rs" },
+]
 
 [tool.maturin]
 python-source = "python"
