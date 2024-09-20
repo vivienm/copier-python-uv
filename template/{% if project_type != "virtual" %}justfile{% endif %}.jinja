@@ -52,8 +52,8 @@ sphinx:
 [group('python')]
 {% endif %}
 pip-audit:
-  requirements="$(uv export --format requirements-txt --all-extras --no-emit-project)" \
-  && uv run pip-audit --strict --require-hashes --disable-pip --requirement <(echo "${requirements}")
+  uv run pip-audit --strict --require-hashes --disable-pip --requirement \
+    <(uv export --format requirements-txt --all-extras --no-emit-project)
 
 typos:
   typos
