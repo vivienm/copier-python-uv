@@ -1,7 +1,7 @@
 {# I'd rather indent with two spaces, but this clashes with uv's formatting. #}
 {% if project_type != "virtual" %}
 [project]
-name = "{{ project_slug }}"
+name = "{{ module_name | replace('_', '-') }}"
 version = "0.1.0"
 description = "{{ project_description.removesuffix('.') }}"
 readme = "README.md"
