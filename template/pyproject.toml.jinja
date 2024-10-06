@@ -46,7 +46,7 @@ build-backend = "maturin"
 
 [tool.uv]
 dev-dependencies = [
-{% if project_type == "library" %}
+{% if doc_generator == "sphinx" %}
     "furo>=2024.8.6",
 {% endif %}
     "mypy>=1.11.0",
@@ -54,7 +54,7 @@ dev-dependencies = [
     "pip-audit>=2.7.3",
     "pytest>=8.3.1",
     "ruff>=0.5.4",
-{% if project_type == "library" %}
+{% if doc_generator == "sphinx" %}
     "sphinx>=8.0.2",
 {% endif %}
 ]

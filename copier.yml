@@ -112,6 +112,19 @@ script_name:
     You must provide a name for the Python script.
     {%- endif -%}
 
+doc_generator:
+  help: "Documentation generator"
+  type: "str"
+  choices:
+  - "sphinx"
+  - "none"
+  default: >
+    {%- if project_type == 'library' -%}
+    sphinx
+    {%- else -%}
+    none
+    {%- endif -%}
+
 python_version:
   help: "Minimum Python version"
   type: "str"
@@ -168,10 +181,10 @@ repo_url:
     {%- endif -%}
 
 github_pages:
-  when: "{{ hosting_platform == 'github' and project_type == 'library' }}"
+  when: "{{ hosting_platform == 'github' and doc_generator != 'none' }}"
   help: "Enable GitHub Pages"
   type: "bool"
-  default: "{{ hosting_platform == 'github' and project_type == 'library' }}"
+  default: "{{ hosting_platform == 'github' and doc_generator != 'none' }}"
 
 pages_url:
   when: false

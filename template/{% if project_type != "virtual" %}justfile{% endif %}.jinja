@@ -39,7 +39,7 @@ mypy:
 {% endif %}
 pytest *args="":
   uv run pytest {{ '{{' }}args{{ '}}' }}
-{% if project_type == "library" %}
+{% if doc_generator == "sphinx" %}
 
 {% if build_system == "maturin" %}
 [group('python')]
