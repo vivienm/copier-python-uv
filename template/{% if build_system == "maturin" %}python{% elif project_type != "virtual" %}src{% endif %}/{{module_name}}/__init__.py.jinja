@@ -1,6 +1,7 @@
 {% if build_system == "maturin" %}
-from ._lowlevel import hello
+from ._core import hello
 
+{# Required for Sphinx: #}
 __all__ = ["hello"]
 {% else %}
 def hello() -> str:

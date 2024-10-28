@@ -40,7 +40,7 @@ Issues = "{{ repo_url }}/issues"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 {% elif build_system == "maturin" %}
-requires = ["maturin>=1.7.0"]
+requires = ["maturin>=1.0,<2.0"]
 build-backend = "maturin"
 {% endif %}
 
@@ -69,18 +69,11 @@ cache-keys = [
 
 [tool.maturin]
 python-source = "python"
-module-name = "{{ module_name }}._lowlevel"
-features = ["pyo3/extension-module"]
+module-name = "{{ module_name }}._core"
 {% endif %}
 
 [tool.mypy]
 strict = true
-{% if build_system == "maturin" %}
-
-[[tool.mypy.overrides]]
-module = "{{ module_name }}._lowlevel"
-ignore_missing_imports = true
-{% endif %}
 
 [tool.ruff.lint]
 extend-select= [

@@ -9,4 +9,4 @@ name = "_{{ module_name }}"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.22.2"
+pyo3 = { version = "0.22.4", features = ["extension-module", "abi3-py3{% if python_version_info >= [3, 13] %}12{% else %}{{ python_version_info[1] }}{% endif %}"] }
