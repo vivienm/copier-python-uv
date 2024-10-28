@@ -44,8 +44,8 @@ requires = ["maturin>=1.7.0"]
 build-backend = "maturin"
 {% endif %}
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
 {% if doc_generator == "sphinx" %}
     "furo>=2024.8.6",
 {% endif %}
@@ -59,6 +59,8 @@ dev-dependencies = [
 {% endif %}
 ]
 {% if build_system == "maturin" %}
+
+[tool.uv]
 cache-keys = [
     { file = "Cargo.toml" },
     { file = "Cargo.lock" },
