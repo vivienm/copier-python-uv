@@ -1,5 +1,4 @@
 {# I'd rather indent with two spaces, but this clashes with uv's formatting. #}
-{% if project_type != "virtual" %}
 [project]
 name = "{{ module_name | replace('_', '-') }}"
 version = "0.1.0"
@@ -34,6 +33,7 @@ Repository = "{{ repo_url }}"
 Issues = "{{ repo_url }}/issues"
 {% endif %}
 {% endif %}
+{% if project_type != "virtual" %}
 
 [build-system]
 {% if build_system == "hatchling" %}
@@ -99,8 +99,4 @@ testpaths = [
     "src",
     "tests",
 ]
-{% else %}
-{# Virtual project type. #}
-[tool.uv.workspace]
-members = []
 {% endif %}
