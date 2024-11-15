@@ -28,12 +28,14 @@ jobs:
         with:
           tool: "just{% if build_system == 'maturin' %}, cargo-audit{% endif %}, typos"
       - name: "Install uv"
-        run: "curl -LsSf https://astral.sh/uv/install.sh | sh"
+        uses: "astral-sh/setup-uv@v3"
+        with:
+          enable-cache: true
 {% if build_system == "maturin" %}
       - name: "Cache Cargo directories"
         uses: "actions/cache@v4"
         with:
-{# Directory ~/.cargo/bin/ is populated by taiki-e/install-action and uv installer, we don't want to cache it #}
+{# Directory ~/.cargo/bin/ is populated by taiki-e/install-action, we don't want to cache it #}
           path: |
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
@@ -45,14 +47,6 @@ jobs:
           key: "${{ '{{' }} runner.os {{ '}}' }}-cargo-${{ '{{' }} hashFiles('Cargo.lock') {{ '}}' }}"
           restore-keys: "${{ '{{' }} runner.os {{ '}}' }}-cargo-"
 {% endif %}
-      - name: "Cache uv directories"
-        uses: "actions/cache@v4"
-        with:
-          path: |
-            ~/.cache/uv/
-            .venv/
-          key: "${{ '{{' }} runner.os {{ '}}' }}-uv-${{ '{{' }} hashFiles('uv.lock') {{ '}}' }}"
-          restore-keys: "${{ '{{' }} runner.os {{ '}}' }}-uv-"
       - name: "Run Just"
         run: |
 {# We install Python first, else the cached venv is invalidated due to missing Python interpreter. #}
@@ -68,9 +62,6 @@ jobs:
           SCCACHE_GHA_ENABLED: "true"
           RUSTFLAGS: "-D warnings"
 {% endif %}
-{# https://docs.astral.sh/uv/guides/integration/github/#caching #}
-      - name: "Prune uv cache"
-        run: "uv cache prune --ci"
 {% if project_type == "library" %}
       - name: "Upload docs artifact"
         uses: "actions/upload-artifact@v4"
