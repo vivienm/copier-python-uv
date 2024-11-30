@@ -19,7 +19,12 @@ cargo-audit:
 {% if build_system == "maturin" %}
 [group('python')]
 {% endif %}
-ruff:
+ruff: ruff-check ruff-format
+
+{% if build_system == "maturin" %}
+[group('python')]
+{% endif %}
+ruff-check:
   uv run ruff check
 
 {% if build_system == "maturin" %}
