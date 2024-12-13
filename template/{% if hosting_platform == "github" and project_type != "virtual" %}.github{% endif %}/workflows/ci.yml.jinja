@@ -61,6 +61,7 @@ jobs:
           RUSTC_WRAPPER: "sccache"
           SCCACHE_GHA_ENABLED: "true"
           RUSTFLAGS: "-D warnings"
+          UV_LOCKED: "true"
 {% endif %}
 {% if project_type == "library" %}
       - name: "Upload docs artifact"
