@@ -48,14 +48,14 @@ jobs:
           restore-keys: "${{ '{{' }} runner.os {{ '}}' }}-cargo-"
 {% endif %}
       - name: "Run Just"
-        run: |
-{# We install Python first, else the cached venv is invalidated due to missing Python interpreter. #}
-          uv python install
 {% if build_system == "maturin" %}
+        run: |
 {# The package may look present in the cached venv but its extension is missing. Let uv rebuild it. #}
           touch pyproject.toml
-{% endif %}
           just ci
+{% else %}
+        run: "just ci"
+{% endif %}
 {% if build_system == "maturin" %}
         env:
           RUSTC_WRAPPER: "sccache"
