@@ -61,7 +61,7 @@ pip-audit:
     <(uv export --format requirements-txt --all-extras --no-emit-project)
 
 typos:
-  typos
+  uv run typos
 {% if project_type == "application" %}
 
 run *args="":
