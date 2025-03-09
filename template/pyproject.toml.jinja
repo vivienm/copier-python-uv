@@ -5,7 +5,7 @@ version = "0.1.0"
 description = "{{ project_description.removesuffix('.') }}"
 readme = "README.md"
 authors = [
-    { name = "{{ author_name }}", email = "{{ author_email }}" },
+    { name = "{{ user_name }}", email = "{{ user_email }}" },
 ]
 license = { text = "{% if license == 'Proprietary' %}LicenseRef-Proprietary{% else %}{{ license }}{% endif %}" }
 classifiers = ["Private :: Do Not Upload"]
@@ -29,7 +29,7 @@ Documentation = "{{ pages_url }}"
 {% endif %}
 {% if repo_url %}
 Repository = "{{ repo_url }}"
-{% if hosting_platform == "github" %}
+{% if forge == "github" %}
 Issues = "{{ repo_url }}/issues"
 {% endif %}
 {% endif %}
