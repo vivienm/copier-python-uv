@@ -5,7 +5,7 @@ _src_path: git@github.com:vivienm/copier-copier
 copyright_holder: Vivien Maisonneuve
 copyright_year: 2024
 forge: github
-github_repo: copier-python-uv
+github_repo: copier-python
 github_user: vivienm
 license: MIT
 project_description: An opinionated Copier template for Python projects.

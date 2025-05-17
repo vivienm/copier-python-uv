@@ -22,7 +22,7 @@ To install Copier, please follow the installation instructions [here](https://co
 Then, to create a new project based on this template, run:
 
 ```bash
-copier copy 'https://github.com/vivienm/copier-python-uv' path/to/your/project
+copier copy 'https://github.com/vivienm/copier-python' path/to/your/project
 ```
 
 and fill in the form.
