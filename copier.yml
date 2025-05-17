@@ -20,17 +20,17 @@ project_type:
   help: "Project type"
   type: "str"
   choices:
-  - "application"
-  - "library"
-  - "virtual"
+    - "application"
+    - "library"
+    - "virtual"
 
 build_system:
   when: "{{ project_type == 'library' }}"
   help: "Build system"
   type: "str"
   choices:
-  - "hatchling"
-  - "maturin"
+    - "hatchling"
+    - "maturin"
   default: "hatchling"
 
 project_description:
@@ -66,8 +66,8 @@ license:
   help: "Project license"
   type: "str"
   choices:
-  - "MIT"
-  - "Proprietary"
+    - "MIT"
+    - "Proprietary"
   default: "Proprietary"
 
 copyright_holder:
@@ -116,8 +116,8 @@ doc_generator:
   help: "Documentation generator"
   type: "str"
   choices:
-  - "sphinx"
-  - "none"
+    - "sphinx"
+    - "none"
   default: >
     {%- if project_type == 'library' -%}
     sphinx
@@ -143,8 +143,8 @@ forge:
   help: "Code hosting platform for the project"
   type: "str"
   choices:
-  - "none"
-  - "github"
+    - "none"
+    - "github"
 
 github_user:
   when: "{{ forge == 'github' }}"

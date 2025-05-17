@@ -21,7 +21,7 @@ To install Copier, please follow the installation instructions [here](https://co
 
 Then, to create a new project based on this template, run:
 
-```shell
+```bash
 copier copy 'https://github.com/vivienm/copier-python-uv' path/to/your/project
 ```
 
@@ -29,7 +29,7 @@ and fill in the form.
 
 Go to the project directory and run the tests:
 
-```shell
+```bash
 just ci
 ```
 
@@ -37,6 +37,6 @@ You are now ready to start coding!
 
 Later on, if this template evolves and you want to update your project, run:
 
-```shell
+```bash
 copier update --skip-answered
 ```
